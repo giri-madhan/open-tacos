@@ -1,7 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { useForm, FormProvider } from 'react-hook-form'
 import clx from 'classnames'
-import { useMutation } from '@apollo/client'
 import { signIn, useSession } from 'next-auth/react'
 
 import { MUTATION_UPDATE_AREA, UpdateAreaReturnType, UpdateAreaProps } from '../../js/graphql/gql/contribs'
@@ -11,6 +10,7 @@ import Input from '../ui/form/Input'
 import TextArea from '../ui/form/TextArea'
 import Toast from '../ui/Toast'
 import { AreaType, AreaUpdatableFieldsType } from '../../js/types'
+import { useSecureMutation } from '../../js/hooks/useSecureMutation'
 
 export interface ChildAreaBaseProps {
   areaUuid: string
@@ -34,7 +34,7 @@ export default function AreaEditForm (props: AreaType & { formRef?: any }): JSX.
   // react-hook-form has a similar prop but it gets reset when we call  `form.reset()`
   const [submitCount, setSubmitCount] = useState(0)
 
-  const [updateArea, { error: gqlError }] = useMutation<{ updateArea: UpdateAreaReturnType }, UpdateAreaProps>(
+  const [updateArea, { error: gqlError }] = useSecureMutation<{ updateArea: UpdateAreaReturnType }, UpdateAreaProps>(
     MUTATION_UPDATE_AREA, {
       client: graphqlClient,
       onCompleted: () => {
@@ -74,11 +74,6 @@ export default function AreaEditForm (props: AreaType & { formRef?: any }): JSX.
         variables: {
           uuid,
           ...doc
-        },
-        context: {
-          headers: {
-            authorization: `Bearer ${session?.data?.accessToken as string ?? ''}`
-          }
         }
       })
       if (rs.errors == null) {
