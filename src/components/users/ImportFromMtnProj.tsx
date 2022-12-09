@@ -1,11 +1,11 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Transition } from '@headlessui/react'
 import { FolderArrowDownIcon, XMarkIcon } from '@heroicons/react/24/outline'
-import { useMutation } from '@apollo/client'
 import { useSession } from 'next-auth/react'
 import { graphqlClient } from '../../js/graphql/Client'
 import { Button, ButtonVariant } from '../ui/BaseButton'
 import { MUTATION_IMPORT_TICKS } from '../../js/graphql/gql/fragments'
+import { useSecureMutation } from '../../js/hooks/useSecureMutation'
 
 interface Props {
   isButton: boolean
@@ -28,7 +28,7 @@ export function ImportFromMtnProj ({ isButton }: Props): JSX.Element {
   const [showInput, setShowInput] = useState(false)
   const [loading, setLoading] = useState(false)
   const [errors, setErrors] = useState<string[]>([])
-  const [addTicks] = useMutation(
+  const [addTicks] = useSecureMutation(
     MUTATION_IMPORT_TICKS, {
       client: graphqlClient,
       errorPolicy: 'none'

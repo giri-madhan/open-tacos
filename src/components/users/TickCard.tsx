@@ -1,8 +1,8 @@
 import { MUTATION_REMOVE_TICK_BY_ID } from '../../js/graphql/gql/fragments'
 import { graphqlClient } from '../../js/graphql/Client'
-import { useMutation } from '@apollo/client'
 import AlertDialogue from '../ui/micro/AlertDialogue'
 import { TickType } from '../../js/types'
+import { useSecureMutation } from '../../js/hooks/useSecureMutation'
 
 interface Props{
   ticks: TickType[]
@@ -14,7 +14,7 @@ interface Props{
 }
 
 export default function TickCard ({ tickId, ticks, setTicks, dateClimbed, notes, style }: Props): JSX.Element {
-  const [deleteTick] = useMutation(
+  const [deleteTick] = useSecureMutation(
     MUTATION_REMOVE_TICK_BY_ID, {
       client: graphqlClient,
       errorPolicy: 'none'

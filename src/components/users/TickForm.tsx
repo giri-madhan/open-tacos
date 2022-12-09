@@ -1,12 +1,12 @@
 import { Fragment, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { useMutation } from '@apollo/client'
 import { useSession } from 'next-auth/react'
 import { TickType } from '../../js/types'
 import { graphqlClient } from '../../js/graphql/Client'
 import { MUTATION_ADD_TICK } from '../../js/graphql/gql/fragments'
 import ComboBox from '../ui/ComboBox'
 import * as Yup from 'yup'
+import { useSecureMutation } from '../../js/hooks/useSecureMutation'
 
 // validation schema for ticks
 const TickSchema = Yup.object().shape({
@@ -65,7 +65,7 @@ export default function TickForm ({ open, setOpen, setTicks, ticks, isTicked, cl
   const [notes, setNotes] = useState<string>('')
   const [errors, setErrors] = useState<string[]>()
   const session = useSession()
-  const [addTick] = useMutation(
+  const [addTick] = useSecureMutation(
     MUTATION_ADD_TICK, {
       client: graphqlClient,
       errorPolicy: 'none'
